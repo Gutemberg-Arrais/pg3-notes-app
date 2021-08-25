@@ -1,23 +1,19 @@
-const fs = require('fs')
-
-function loadData() {
-    try {
-        return JSON.parse((fs.readFileSync('./data.json')).toString())
-    } catch (error) {
-        return []
-    }
-}
+const { save, load } = require("./fileManager")
 
 function add(title, body) {
- const data = loadData()
+ const data = load()
+ const isExists = data.find(value => value.title === title && value.body === body)
+ if(isExists) {
+    return console.log('Note already exists: ', title)
+ }
  data.push({title, body})
  console.log(title, body)  
- saveData(data) 
+ save(data) 
  console.log("New note added!")
 }
 
 function remove(title) {
-    const data = loadData()
+    const data = load()
     const isExists = data.find(value => value.title === title)
     
     if(!isExists) {
@@ -28,24 +24,23 @@ function remove(title) {
         return value.title !== title
     })
 
-    saveData(data)
+    save(data)
     return console.log('Data removed: ', title)
 }
 
 function list() {
-    return console.log(loadData())
+    return console.log(load())
 }
 
 function read(title) {
-    const data = loadData()
-    return console.log(data.find(value => value.title === title))
+    const data = load()
+    const found = data.find(value => value.title === title)
+    if(found) return console.log(found)
+    return console.log('Note not exists')
 }
 
-function saveData(data) {
-    if(!data) return
-    return fs.writeFileSync('./data.json', JSON.stringify(data))
-}
+
 
 module.exports = {
-    add, list, loadData, read, remove, saveData
+    add, list, load, read, remove, save
 }

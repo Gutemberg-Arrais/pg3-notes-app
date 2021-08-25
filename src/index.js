@@ -1,6 +1,4 @@
-const chalk = require('chalk')
 const yargs = require('yargs')
-const fs = require('fs')
 const { add, remove, list, read} = require('./notes')
 
 yargs.command({
